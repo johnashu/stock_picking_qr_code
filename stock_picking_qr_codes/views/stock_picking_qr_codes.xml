@@ -1,0 +1,38 @@
+
+<!--
+    Stock Picking report: replace all barcodes with QR codes.
+    Inherits stock.report_picking 
+    add / remove classes to the xpath blocks to position the barcodes as needed
+-->
+
+<data>
+    <!-- 1. Document (picking name) barcode → QR, pushed to far right -->
+    <data>
+        <!-- 1. Document (picking name) barcode → QR -->
+        <xpath expr="//div[@t-field='o.name'][contains(@t-options, 'barcode')]"
+            position="attributes">
+            <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR', 'width': 200,
+                'height':
+                200, 'img_style': 'width:80px;height:80px;'}</attribute>
+        </xpath>
+    </data>
+
+    <!-- 2. Lot / Serial Number barcode → QR -->
+    <xpath expr="//span[@t-esc='ml.lot_id.name or ml.lot_name']" position="attributes">
+        <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR', 'width': 200, 'height':
+            200, 'img_style': 'width:60px;height:60px;'}</attribute>
+    </xpath>
+
+    <!-- 3. Product barcode → QR -->
+    <xpath expr="//div[@t-field='ml.product_id.barcode']" position="attributes">
+        <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR', 'width': 200, 'height':
+            200, 'img_style': 'width:60px;height:60px;'}</attribute>
+    </xpath>
+
+    <!-- 4. Package barcode → QR -->
+    <xpath expr="//div[@t-field='package.package_id.name'][contains(@t-options, 'barcode')]"
+        position="attributes">
+        <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR', 'width': 200, 'height':
+            200, 'img_style': 'width:80px;height:80px;'}</attribute>
+    </xpath>
+</data>
