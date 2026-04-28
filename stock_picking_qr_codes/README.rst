@@ -10,6 +10,10 @@ Stock Picking QR Codes
 
 |badge1| |badge2|
 
+.. image:: static/description/image.png
+   :alt: Stock picking report with QR codes
+   :width: 100%
+
 Replaces every barcode on the standard Stock Picking (Delivery Slip) PDF
 report with a QR code.
 
