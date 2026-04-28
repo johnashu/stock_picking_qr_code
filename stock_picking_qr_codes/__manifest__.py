@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Stock Picking QR Codes",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "category": "Inventory/Inventory",
     "author": "SJR Nebula",
     "website": "https://sjr.ie",

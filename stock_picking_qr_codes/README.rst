@@ -5,8 +5,8 @@ Stock Picking QR Codes
 .. |badge1| image:: https://img.shields.io/badge/licence-LGPL--3-blue.png
     :target: https://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
-.. |badge2| image:: https://img.shields.io/badge/odoo-18.0-blueviolet.png
-    :alt: Odoo 18.0
+.. |badge2| image:: https://img.shields.io/badge/odoo-19.0-blueviolet.png
+    :alt: Odoo 19.0
 
 |badge1| |badge2|
 
@@ -108,11 +108,10 @@ If both this module and ``stock_picking_totals_report`` are installed on
 the same database, the Picking Operations report will fail to render
 unless two of the four QR templates are deactivated.
 
-Why: ``stock_picking_totals_report`` rewrites the per-move-line row of
-the picking report (``<tr t-as='ml'>``) to show consolidated product /
-location totals instead. That row is where the lot/serial and product
-barcodes used to live, so the xpath targets for those two QR conversions
-no longer exist.
+Why: if ``stock_picking_totals_report`` (or any custom module) rewrites
+the relevant `move` / `line` blocks in ``stock.report_picking``, the
+xpath anchors used for lot/serial and product QR conversion may no longer
+exist.
 
 How to fix:
 

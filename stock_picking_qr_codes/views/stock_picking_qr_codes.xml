@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Stock Picking QR Codes - Odoo 18
+    Stock Picking QR Codes
 
     Two reports are patched:
 
       A. stock.report_picking (Picking Operations)
          Each existing barcode widget is converted to QR symbology in
-         place. Targets remain valid for Odoo 18 because the upstream
-         template `stock.report_picking` still renders the same barcode
-         anchors (document, lot/serial, product, package).
+         place. 
 
       B. stock.report_return_slip (Return Slip)
          Both existing barcode widgets on the return slip are converted
@@ -20,14 +18,14 @@
     target can be deactivated independently if a future module mutates
     that section of the upstream report.
 
-    KNOWN CONFLICTS (Odoo 18):
+    KNOWN CONFLICTS:
       * stock_picking_totals_report
-        Replaces the per-line <tr t-as='ml'> row of the Picking
-        Operations report, which removes the xpath targets for the
-        per-line lot/serial and product barcodes. If you install both
-        modules together, deactivate the two views listed below in
-        Settings -> Technical -> Views, otherwise the picking report
-        will fail to render:
+        If another module rewrites the `move`/`line` rows in
+        `stock.report_picking`, xpath anchors for per-line lot/serial
+        and product barcode conversions may no longer exist.
+        If you install both modules together and encounter xpath errors,
+        deactivate the two views listed below in Settings -> Technical
+        -> Views:
             - stock_report_picking_qr_lot
             - stock_report_picking_qr_product
 
@@ -56,16 +54,18 @@
          Deactivate this view if stock_picking_totals_report is installed. -->
     <template id="stock_report_picking_qr_lot"
         inherit_id="stock.report_picking">
-        <xpath expr="//span[@t-esc='ml.lot_id.name or ml.lot_name']"
+        <xpath
+            expr="//span[@t-if='line.lot_id or line.lot_name'][@t-out='line.lot_id.name or line.lot_name'][contains(@t-options, 'barcode')]"
             position="attributes">
             <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR',
                 'width': 200,
                 'height': 200, 'img_style': 'width:60px;height:60px;'}</attribute>
         </xpath>
-        <xpath expr="//span[@t-esc='ml.lot_id.name or ml.lot_name']"
+        <xpath
+            expr="//span[@t-if='line.lot_id or line.lot_name'][@t-out='line.lot_id.name or line.lot_name'][contains(@t-options, 'barcode')]"
             position="after">
             <div class="text-center mt-1">
-                <small t-esc="ml.lot_id.name or ml.lot_name" />
+                <small t-esc="line.lot_id.name or line.lot_name" />
             </div>
         </xpath>
     </template>
@@ -74,16 +74,16 @@
          Deactivate this view if stock_picking_totals_report is installed. -->
     <template id="stock_report_picking_qr_product"
         inherit_id="stock.report_picking">
-        <xpath expr="//div[@t-field='ml.product_id.barcode']"
+        <xpath expr="//div[@t-field='move.product_id.barcode'][contains(@t-options, 'barcode')]"
             position="attributes">
             <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR',
                 'width': 200,
                 'height': 200, 'img_style': 'width:60px;height:60px;'}</attribute>
         </xpath>
-        <xpath expr="//div[@t-field='ml.product_id.barcode']"
+        <xpath expr="//div[@t-field='move.product_id.barcode'][contains(@t-options, 'barcode')]"
             position="after">
             <div class="text-center mt-1">
-                <small t-esc="ml.product_id.barcode" />
+                <small t-esc="move.product_id.barcode" />
             </div>
         </xpath>
     </template>
@@ -91,16 +91,18 @@
     <!-- A4. Package barcode -> QR -->
     <template id="stock_report_picking_qr_package"
         inherit_id="stock.report_picking">
-        <xpath expr="//div[@t-field='package.package_id.name'][contains(@t-options, 'barcode')]"
+        <xpath
+            expr="//td[@name='td_pk_barcode']//div[@t-field='package.name'][contains(@t-options, 'barcode')]"
             position="attributes">
             <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR',
                 'width': 200,
                 'height': 200, 'img_style': 'width:60px;height:60px;'}</attribute>
         </xpath>
-        <xpath expr="//div[@t-field='package.package_id.name'][contains(@t-options, 'barcode')]"
+        <xpath
+            expr="//td[@name='td_pk_barcode']//div[@t-field='package.name'][contains(@t-options, 'barcode')]"
             position="after">
             <div class="text-center mt-1">
-                <small t-esc="package.package_id.name" />
+                <small t-esc="package.name" />
             </div>
         </xpath>
     </template>
