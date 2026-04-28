@@ -1,28 +1,34 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Stock Picking QR Codes",
-    "version": "17.0.1.0.3",
+    "version": "18.0.1.0.0",
     "category": "Inventory/Inventory",
     "author": "SJR Nebula",
     "website": "https://sjr.ie",
     "maintainer": "SJR Nebula",
     "support": "info@sjr.ie",
-    "summary": "Replace all barcodes with QR codes on stock picking reports.",
+    "summary": "Replace barcodes with QR codes on stock picking and return slip reports.",
     "description": """
 Stock Picking QR Codes
 ======================
 
-Replaces every barcode on the standard Stock Picking (Delivery Slip) PDF
-report with a QR code, including:
+Renders QR codes on the standard Stock Picking (Picking Operations) and
+Return Slip PDF reports.
 
-* Document / picking name
-* Lot or Serial Number
-* Product barcode
-* Package barcode
+Picking Operations report (``stock.report_picking``):
 
-The module inherits ``stock.report_picking`` and swaps the ``barcode``
-widget options to use the ``QR`` symbology, so no Python code or report
-template duplication is required.
+* Document / picking name barcode -> QR
+* Lot / Serial Number barcode -> QR
+* Product barcode -> QR
+* Package barcode -> QR
+
+Return Slip report (``stock.report_return_slip``):
+
+* Return reference barcode (``o.name``) -> QR
+* OBTRETU barcode -> QR
+
+The module inherits the standard QWeb templates with ``xpath`` overrides,
+so no Python code or report template duplication is required.
     """,
     "depends": ["stock"],
     "data": [

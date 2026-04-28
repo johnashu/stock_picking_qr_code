@@ -1,28 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Stock Picking report: replace all barcodes with QR codes.
-    Inherits stock.report_picking.
+    Stock Picking QR Codes - Odoo 18
 
-    Each barcode is patched in its own <template> record so that the four
-    QR conversions are independent. If a future module removes one of the
-    xpath targets, only the affected template needs to be deactivated
-    manually (Settings -> Technical -> Views), the others keep working.
+    Two reports are patched:
 
-    KNOWN CONFLICTS:
+      A. stock.report_picking (Picking Operations)
+         Each existing barcode widget is converted to QR symbology in
+         place. Targets remain valid for Odoo 18 because the upstream
+         template `stock.report_picking` still renders the same barcode
+         anchors (document, lot/serial, product, package).
+
+      B. stock.report_return_slip (Return Slip)
+         Both existing barcode widgets on the return slip are converted
+         to QR in place:
+           - o.name
+           - 'OBTRETU'
+
+    Each QR conversion lives in its own <template> record so that one
+    target can be deactivated independently if a future module mutates
+    that section of the upstream report.
+
+    KNOWN CONFLICTS (Odoo 18):
       * stock_picking_totals_report
-        Replaces the per-line <tr t-as='ml'> row, which removes the xpath
-        targets for #2 (Lot / Serial) and #3 (Product). If you install
-        both modules together, deactivate the two views listed below in
-        Settings -> Technical -> Views, otherwise the picking report will
-        fail to render:
+        Replaces the per-line <tr t-as='ml'> row of the Picking
+        Operations report, which removes the xpath targets for the
+        per-line lot/serial and product barcodes. If you install both
+        modules together, deactivate the two views listed below in
+        Settings -> Technical -> Views, otherwise the picking report
+        will fail to render:
             - stock_report_picking_qr_lot
             - stock_report_picking_qr_product
 
-    Adjust width / height / img_style on each t-options to resize the QR codes.
+    Adjust width / height / img_style on each t-options to resize the
+    QR codes.
 -->
 <odoo>
 
-    <!-- 1. Document (picking name) barcode -> QR -->
+    <!--
+        ============================================================
+        A. stock.report_picking (Picking Operations)
+        ============================================================
+    -->
+
+    <!-- A1. Document (picking name) barcode -> QR -->
     <template id="stock_report_picking_qr_document"
         inherit_id="stock.report_picking">
         <xpath expr="//div[@t-field='o.name'][contains(@t-options, 'barcode')]"
@@ -32,7 +52,7 @@
         </xpath>
     </template>
 
-    <!-- 2. Lot / Serial Number barcode -> QR
+    <!-- A2. Lot / Serial Number barcode -> QR
          Deactivate this view if stock_picking_totals_report is installed. -->
     <template id="stock_report_picking_qr_lot"
         inherit_id="stock.report_picking">
@@ -50,7 +70,7 @@
         </xpath>
     </template>
 
-    <!-- 3. Product barcode -> QR
+    <!-- A3. Product barcode -> QR
          Deactivate this view if stock_picking_totals_report is installed. -->
     <template id="stock_report_picking_qr_product"
         inherit_id="stock.report_picking">
@@ -68,7 +88,7 @@
         </xpath>
     </template>
 
-    <!-- 4. Package barcode -> QR -->
+    <!-- A4. Package barcode -> QR -->
     <template id="stock_report_picking_qr_package"
         inherit_id="stock.report_picking">
         <xpath expr="//div[@t-field='package.package_id.name'][contains(@t-options, 'barcode')]"
@@ -82,6 +102,35 @@
             <div class="text-center mt-1">
                 <small t-esc="package.package_id.name" />
             </div>
+        </xpath>
+    </template>
+
+    <!--
+        ============================================================
+        B. stock.report_return_slip (Return Slip)
+        ============================================================
+        The return slip includes two barcode widgets directly in
+        stock.report_return_slip, so both can be swapped via
+        position="attributes".
+    -->
+
+    <!-- B1. Return slip o.name barcode -> QR -->
+    <template id="stock_report_return_slip_qr_name"
+        inherit_id="stock.report_return_slip">
+        <xpath expr="//span[@t-field='o.name'][contains(@t-options, 'barcode')]"
+            position="attributes">
+            <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR',
+                'width': 200, 'height': 200, 'img_style': 'width:80px;height:80px;'}</attribute>
+        </xpath>
+    </template>
+
+    <!-- B2. Return slip OBTRETU barcode -> QR -->
+    <template id="stock_report_return_slip_qr_obtretu"
+        inherit_id="stock.report_return_slip">
+        <xpath expr="//span[@t-out=&quot;'OBTRETU'&quot;][contains(@t-options, 'barcode')]"
+            position="attributes">
+            <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR',
+                'width': 200, 'height': 200, 'img_style': 'width:80px;height:80px;'}</attribute>
         </xpath>
     </template>
 
