@@ -120,17 +120,24 @@
         <xpath expr="//span[@t-field='o.name'][contains(@t-options, 'barcode')]"
             position="attributes">
             <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR',
-                'width': 200, 'height': 200, 'img_style': 'width:80px;height:80px;'}</attribute>
+                'width': 200, 'height': 200, 'img_style': 'width:100px;height:100px;'}</attribute>
         </xpath>
-    </template>
+        <xpath
+            expr="//div[span[@t-field='o.name'][contains(@t-options, 'barcode')]]/span[@t-out='o.name']"
+            position="attributes">
+            <attribute name="class">d-block mt-1 text-center</attribute>
+        </xpath>
 
-    <!-- B2. Return slip OBTRETU barcode -> QR -->
-    <template id="stock_report_return_slip_qr_obtretu"
-        inherit_id="stock.report_return_slip">
+        <!-- B2. Return slip OBTRETU barcode -> QR -->
+
         <xpath expr="//span[@t-out=&quot;'OBTRETU'&quot;][contains(@t-options, 'barcode')]"
             position="attributes">
             <attribute name="t-options">{'widget': 'barcode', 'symbology': 'QR',
-                'width': 200, 'height': 200, 'img_style': 'width:80px;height:80px;'}</attribute>
+                'width': 200, 'height': 200, 'img_style': 'width:100px;height:100px;'}</attribute>
+        </xpath>
+        <xpath expr="//div[@style='margin-top:200px;']/span[not(@t-options)]"
+            position="attributes">
+            <attribute name="class">d-block mt-1 text-center</attribute>
         </xpath>
     </template>
 
