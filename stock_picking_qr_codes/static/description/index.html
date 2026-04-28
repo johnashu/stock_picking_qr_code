@@ -74,6 +74,11 @@
         <li><strong>Product barcode</strong> &mdash; per move-line product barcode</li>
         <li><strong>Package barcode</strong> &mdash; package label barcode</li>
       </ul>
+      <p>
+        For readability on printed reports, the encoded value is also shown as
+        text under the <strong>Lot / Serial</strong>, <strong>Product</strong>,
+        and <strong>Package</strong> QR codes.
+      </p>
 
       <h2>Why use it</h2>
       <ul>
@@ -90,6 +95,49 @@
         <li>The PDF will now contain QR codes in place of the original barcodes.</li>
       </ol>
 
+      <h2>Changing the QR code size</h2>
+      <p>
+        Each QR code can be resized independently. Open
+        <code>views/stock_picking_qr_codes.xml</code> and edit the
+        <code>t-options</code> attribute for the code you want to change:
+      </p>
+      <ul>
+        <li><strong><code>width</code> / <code>height</code></strong> &mdash; the rendered image resolution in pixels (controls sharpness; default <code>200</code> x <code>200</code>).</li>
+        <li><strong><code>img_style</code></strong> &mdash; the on-page CSS size, for example <code>width:80px;height:80px;</code> for the document and package codes, and <code>width:60px;height:60px;</code> for the lot/serial and product codes.</li>
+      </ul>
+      <p>
+        After saving the file, upgrade the module (<em>Apps &rarr; Stock
+        Picking QR Codes &rarr; Upgrade</em>) for the new sizes to take
+        effect.
+      </p>
+      <p>Example &mdash; make the document QR code larger:</p>
+      <pre>&lt;attribute name="t-options"&gt;{'widget': 'barcode', 'symbology': 'QR',
+    'width': 300, 'height': 300,
+    'img_style': 'width:120px;height:120px;'}&lt;/attribute&gt;</pre>
+
+      <h2>Known conflicts</h2>
+      <p>
+        <strong>stock_picking_totals_report</strong> &mdash; if both
+        modules are installed on the same database, the picking report
+        will fail to render until two of the four QR templates are
+        deactivated. The totals module rewrites the per-move-line row of
+        the picking report, which removes the xpath targets for the
+        lot/serial and product barcodes.
+      </p>
+      <p>To fix:</p>
+      <ol>
+        <li>Open <em>Settings &rarr; Technical &rarr; User Interface &rarr; Views</em>.</li>
+        <li>Find the view with External ID <code>stock_report_picking_qr_lot</code> and untick <strong>Active</strong>.</li>
+        <li>Repeat for <code>stock_report_picking_qr_product</code>.</li>
+      </ol>
+      <p>
+        The document-name and package QR codes still print; only the
+        per-line lot/serial and product barcodes are skipped (they are
+        no longer printed by the totals report anyway). Re-tick
+        <strong>Active</strong> on both views if you later uninstall the
+        totals module.
+      </p>
+
       <h2>Info</h2>
       <table>
         <tbody>
@@ -99,7 +147,7 @@
           </tr>
           <tr>
             <th>Version</th>
-            <td>17.0.0.0.0</td>
+            <td>17.0.1.0.3</td>
           </tr>
           <tr>
             <th>Depends</th>
