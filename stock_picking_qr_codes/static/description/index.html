@@ -68,9 +68,9 @@
         class="hero-image"
       />
       <p class="lead">
-        Replace every barcode on the standard Stock Picking (Delivery Slip)
-        PDF report with a QR code &mdash; no template duplication, no Python
-        overrides.
+        Replace barcodes with QR codes on standard Stock Picking (Delivery
+        Slip) and Return Slip PDF reports &mdash; no template duplication, no
+        Python overrides.
       </p>
 
       <h2>What it does</h2>
@@ -90,6 +90,15 @@
         text under the <strong>Lot / Serial</strong>, <strong>Product</strong>,
         and <strong>Package</strong> QR codes.
       </p>
+      <p>
+        It also updates <strong>Return Slip</strong>
+        (<code>stock.report_return_slip</code>) and converts both default
+        barcode widgets to QR:
+      </p>
+      <ul>
+        <li><strong>Return reference (<code>o.name</code>)</strong> &mdash; barcode converted to QR</li>
+        <li><strong>Return code</strong> &mdash; barcode converted to QR (<code>O-BTN.return</code> on Odoo 17, <code>OBTRETU</code> on Odoo 18)</li>
+      </ul>
 
       <h2>Why use it</h2>
       <ul>
@@ -102,8 +111,7 @@
       <ol>
         <li>Install the <em>Stock Picking QR Codes</em> module.</li>
         <li>Open <em>Inventory &rarr; Transfers</em> and select a picking.</li>
-        <li>Click <em>Print &rarr; Picking Operations</em> (or <em>Delivery Slip</em>).</li>
-        <li>The PDF will now contain QR codes in place of the original barcodes.</li>
+        <li>Click <em>Print &rarr; Picking Operations</em> (or <em>Delivery Slip</em>) to see picking QR codes, or <em>Print &rarr; Return Slip</em> to see Return Slip QR conversions.</li>
       </ol>
 
       <h2>Changing the QR code size</h2>

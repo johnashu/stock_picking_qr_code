@@ -14,8 +14,8 @@ Stock Picking QR Codes
    :alt: Stock picking report with QR codes
    :width: 100%
 
-Replaces every barcode on the standard Stock Picking (Delivery Slip) PDF
-report with a QR code.
+Replaces barcodes with QR codes on the standard Stock Picking (Delivery
+Slip) and Return Slip PDF reports.
 
 Features
 ========
@@ -30,15 +30,24 @@ The following barcodes are converted to QR codes on the picking report:
 For readability on printed reports, the encoded value is also shown as text
 under the **Lot / Serial**, **Product**, and **Package** QR codes.
 
+Return Slip report (``stock.report_return_slip``)
+-------------------------------------------------
+
+The standard return slip includes two barcode widgets. This module converts
+both to QR codes:
+
+* **Return reference (`o.name`)** — barcode converted to QR
+* **Return code** — barcode converted to QR
+  (``O-BTN.return`` on Odoo 17, ``OBTRETU`` on Odoo 18)
+
 How it works
 ============
 
-The module inherits the ``stock.report_picking`` QWeb template and uses
-``xpath`` overrides with ``position="attributes"`` to swap each
-``t-options`` ``barcode`` widget to use the ``QR`` symbology. No Python
-code is added and no report templates are duplicated, so the module stays
-compatible with future Odoo updates as long as the upstream xpath targets
-remain stable.
+The module inherits standard QWeb report templates and uses ``xpath``
+overrides with ``position="attributes"`` to swap ``t-options`` ``barcode``
+widgets to ``QR`` symbology. No Python code is added and no report templates
+are duplicated, so the module stays compatible with future Odoo updates as
+long as the upstream xpath targets remain stable.
 
 For lot/serial, product, and package entries, additional ``xpath`` inserts
 (``position="after"``) add a text label below each QR code with the same
@@ -47,16 +56,18 @@ value that was encoded.
 Configuration
 =============
 
-No configuration required. After installing the module, print any stock
-picking and the barcodes on the PDF will render as QR codes.
+No configuration required. After installing the module, print a stock
+picking (*Picking Operations* / *Delivery Slip*) or *Return Slip* and
+the configured barcodes on the PDF will render as QR codes.
 
 Usage
 =====
 
 #. Install the **Stock Picking QR Codes** module.
 #. Open *Inventory → Transfers* and select a picking.
-#. Click *Print → Picking Operations* (or *Delivery Slip*).
-#. The PDF will now contain QR codes in place of the original barcodes.
+#. Click *Print → Picking Operations* (or *Delivery Slip*) to see picking
+   QR codes, or *Print → Return Slip* to see the return reference and
+   return-code QR conversions.
 
 Customisation — changing the QR code size
 =========================================
